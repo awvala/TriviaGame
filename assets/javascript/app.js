@@ -76,7 +76,7 @@ showAnswer: function (userAnswer) {
     $("#submitButton").css("display", "none");
     game.currentQuestion ++;
     
-    if (game.currentQuestion < game.slidearr.length) {
+    if (game.currentQuestion < game.slidearr.length+1) {
         //start 10 second timer
         $("#nextButton").css("display", "inline-block");
         answerClock.clockType = "Answer";
@@ -89,12 +89,25 @@ showAnswer: function (userAnswer) {
 },
 
 showResults: function () {
+
+    var updateResults = $("#results");
+    var correctPara = $("<p>");
+    var incorrectPara = $("<p>");
+    var outOfTimePara = $("<p>");
+
     // clear question id and classes
     $("#timerText").css("display", "none");
 
     // show results in article results id
-    $("#results").css("display", "inline-block");
-    // show startButton and change value attrribute to "try again?"
+    correctPara.text("Questions correct: " + game.correct);
+    incorrectPara.text("Questions incorrect: " + game.incorrect);
+    outOfTimePara.text("Questions not answered: " + game.outoftime);
+    $(updateResults).css("display", "inline-block");
+    $(updateResults).append(correctPara);
+    $(updateResults).append(incorrectPara);
+    $(updateResults).append(outOfTimePara);
+
+    // show startButton and change value attrribute to "Try again?"
     $("#startButton").css("display", "inline-block").value("Try again?");
 },
 
