@@ -17,6 +17,11 @@ button {
     display: block;
 }
 
+hr {
+    display: none;
+    margin-top: 50px;
+}
+
 #startMessage {
     margin-top: 50px;
 }
@@ -34,6 +39,12 @@ button {
 
 .answers {
     display: none;
+    margin-top: 10px;
+}
+
+#submitButton {
+    display: none;
+    margin-top: 20px;
 }
 
 label {

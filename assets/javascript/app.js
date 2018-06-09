@@ -31,26 +31,38 @@ var game = {
     ],
 
 newQuestion: function (questionIndex) {
-// hide previous answer id's and classes...
+// Hide previous answer id's and classes
 $("#results").css("display", "none");
 $(".answers").css("display", "inline-block");
 $("label").css("display", "inline-block");
+$("#nextButton").css("display", "none");
 $("#questionAndResponse").text(this.slidearr[questionIndex][0]);
-// then grab current Question slidearr and insert question and answers into id buttonBox
+
+// Grab current Question slidearr and insert question and answers into id buttonBox
 for (i = 1; i < this.slidearr.length - 1; i++) {
     var nextAnswer = "#label" + i;
     $(nextAnswer).text(this.slidearr[questionIndex][i]);
 }
+
 // update global variables currentQuestion and current Answer
 this.currentQuestion ++;
 game.currentAnswer = game.slidearr[questionIndex][5];
-//console.log(this);
+console.log(this);
 },
 
 showAnswer: function (userAnswer) {
-// if userAnswer = currentAnsewr , increment correct global variable
-// else,  increment incorrect variable
+if (userAnswer == game.currentAnswer) {
+    game.correct ++;
+    $("#questionAndResponse").text("Correct!");
+} else {
+    game.incorrect ++;
+    $("#questionAndResponse").text("Incorrect!");
+}
 // then clear id buttonBox of question and display answers for 10 seconds
+    $(".answers").css("display", "none");
+    $("#submitButton").css("display", "none");
+    $("#nextButton").css("display", "inline-block");
+    game.currentQuestion ++;
 // If currentQuestions is less than 15 Increment currentQuestions global variable, run newQuestion function
 // if currentQuestion is greater than 14, run showResults function
 
@@ -66,23 +78,31 @@ showResults: function () {
 
 $(document).ready(function() {
 
-// on startButton click
-$(".startButton").click(function() {
-    game.started = true;
-    $("#bottomBanner").css("display", "none");
-    $("#startMessage").css("display", "none");
-    $(".startButton").css("display", "none");
-    game.correct = 0;
-    game.incorrect = 0;
-    game.outoftime = 0;
-    game.currentQuestion = 0;
-    game.currentAnswer = "";
-    game.newQuestion(0);
-});
+    //On startButton click
+    $(".startButton").click(function() {
+        game.started = true;
+        $("#bottomBanner").css("display", "none");
+        $("#startMessage").css("display", "none");
+        $(".startButton").css("display", "none");
+        game.correct = 0;
+        game.incorrect = 0;
+        game.outoftime = 0;
+        game.currentQuestion = 0;
+        game.currentAnswer = "";
+        game.newQuestion(0);
+    });
 
+    // Display submit button after a radio button is clicked
+    $(".answers").click(function() {
+        $("#submitButton").css("display", "inline-block");
+    });
 
-// on answers click
-// grab answer-value from button and pass in into showAnswer function
-
+    // On submitButton click, grab the select radio value and pass it to showAnswer function
+    $("#submitButton").click(function() {
+        $("#submitButton").css("display", "none");
+        var userAnswer = $('input[name=quizAnswer]:checked').val();
+        game.currentQuestion ++;
+        game.showAnswer(userAnswer);
+    });
 
 });
