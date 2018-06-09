@@ -6,7 +6,7 @@ var game = {
     outoftime: 0,
     started: false,
     finished: false,
-    currentQuestions: 0,
+    currentQuestion: 0,
     currentAnswer: "",
     questionTimer: 15000,
     answerTimer: 10000,
@@ -30,9 +30,21 @@ var game = {
         ["Question 14", "Answer 1", "Answer 2", "Answer 3", "Answer 4", 1],
     ],
 
-newQuestion: function () {
-// hide answer id's and classes, then grab current Question slidearr and insert question and answers into id buttonBox
-// update global variables started, currentQuestion, and current Answer
+newQuestion: function (questionIndex) {
+// hide previous answer id's and classes...
+$("#results").css("display", "none");
+$(".answers").css("display", "inline-block");
+$("label").css("display", "inline-block");
+$("#questionAndResponse").text(this.slidearr[questionIndex][0]);
+// then grab current Question slidearr and insert question and answers into id buttonBox
+for (i = 1; i < this.slidearr.length - 1; i++) {
+    var nextAnswer = "#label" + i;
+    $(nextAnswer).text(this.slidearr[questionIndex][i]);
+}
+// update global variables currentQuestion and current Answer
+this.currentQuestion ++;
+game.currentAnswer = game.slidearr[questionIndex][5];
+//console.log(this);
 },
 
 showAnswer: function (userAnswer) {
@@ -53,13 +65,21 @@ showResults: function () {
 }; // end of game object
 
 $(document).ready(function() {
+
 // on startButton click
 $(".startButton").click(function() {
-    
-}
-// set started to true
-// hide bottomBanner
-// reinitialize global variables and run newQuestion Function
+    game.started = true;
+    $("#bottomBanner").css("display", "none");
+    $("#startMessage").css("display", "none");
+    $(".startButton").css("display", "none");
+    game.correct = 0;
+    game.incorrect = 0;
+    game.outoftime = 0;
+    game.currentQuestion = 0;
+    game.currentAnswer = "";
+    game.newQuestion(0);
+});
+
 
 // on answers click
 // grab answer-value from button and pass in into showAnswer function

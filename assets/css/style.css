@@ -36,6 +36,10 @@ button {
     display: none;
 }
 
+label {
+    display: none;
+}
+
 #bottomBanner {
     width: 55%;
     max-height: 200px;
