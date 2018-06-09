@@ -37,6 +37,7 @@ newQuestion: function () {
     // Hide previous answer id's and classes
     var questionIndex =  game.currentQuestion;
     $("#results").css("display", "none");
+    $("#gifanswer").html("");
     $(".answers").css("display", "inline-block");
     $("label").css("display", "inline-block");
     $("#nextButton").css("display", "none");
@@ -49,37 +50,52 @@ newQuestion: function () {
     }
 
 // update global variables currentQuestion and current Answer
-    game.currentQuestion ++;
+    //game.currentQuestion ++;
     game.currentAnswer = game.slidearr[questionIndex][5];
+    answerClock.clockType = "Question";
+    answerClock.start(game.questionTimer);
 },
 
 showAnswer: function (userAnswer) {
     if (userAnswer == game.currentAnswer) {
         game.correct ++;
         $("#questionAndResponse").text("Correct!");
+    } else if (userAnswer == "timesup") {
+        game.outoftime ++;
+        $("#questionAndResponse").text("Out of Time!");
     } else {
         game.incorrect ++;
         $("#questionAndResponse").text("Incorrect!");
     }
+    $("#correctAnswer").text("Correct Answer: " + game.slidearr[game.currentQuestion][game.currentAnswer]);
+    $("#results").css("display", "inline-block");
 
 // then clear id buttonBox of question and display answers for 10 seconds
     $('input[name=quizAnswer]').prop('checked', false);
     $(".answers").css("display", "none");
     $("#submitButton").css("display", "none");
-    $("#nextButton").css("display", "inline-block");
+    game.currentQuestion ++;
     
-    if (game.currentQuestion < 15) {
+    if (game.currentQuestion < game.slidearr.length) {
         //start 10 second timer
+        $("#nextButton").css("display", "inline-block");
+        answerClock.clockType = "Answer";
+        $("#timerText").text("Next question in " + game.answerTimer + " seconds");
         answerClock.start(game.answerTimer);
     } else {
+        $("#nextButton").css("display", "none");
         game.showResults();
     }
 },
 
 showResults: function () {
-// clear question id and classes
-// show results in article results id
-// show startButton and change value attrribute to "try again?""
+    // clear question id and classes
+    $("#timerText").css("display", "none");
+
+    // show results in article results id
+    $("#results").css("display", "inline-block");
+    // show startButton and change value attrribute to "try again?"
+    $("#startButton").css("display", "inline-block").value("Try again?");
 },
 
 }; 
@@ -90,14 +106,20 @@ var answerClock = {
 
     // timer object variables
     time: "",
+    clockType: "",
 
     start: function (newTime) {
+        //console.log(answerClock.clockType);
         if (!clockRunning) {
             answerClock.time = newTime;
             //$("#timerText").css("display", "inline-block");
             intervalId = setInterval(answerClock.count, 1000);
             clockRunning = true;
-            $("#timerText").text("Next question in " + newTime + " seconds");
+            if (answerClock.clockType === "Answer") { 
+                $("#timerText").text("Next question in " + newTime + " seconds");
+            } else if (answerClock.clockType === "Question") {
+                $("#timerText").text("There are " + newTime + " seconds left!");
+            }
           }
     },
 
@@ -105,32 +127,49 @@ var answerClock = {
         clearInterval(intervalId);
         clockRunning= false;
         $("#timerText").text("");
-        game.newQuestion();
+        if (answerClock.clockType == "Answer") { 
+            game.newQuestion();
+        } else if (answerClock.clockType == "Question") {
+            game.showAnswer("timesup");
+        }
       }, 
 
     count: function() {
         answerClock.time--;
+        var startString;
+        var endString;
         var currentTime = answerClock.time;
-        if (currentTime > 1) {
-            var endString = " seconds!";
-        } else if (currentTime == 1) {
-            var endString = " second!";
-        } else {
-            answerClock.stop();
-        }
-        $("#timerText").text("Next question in " + currentTime + endString);
-    },
+        console.log(answerClock.time);
 
-    /*count: function() {
-        answerClock.time--;
-        var currentTime = answerClock.time;
-        if (currentTime > 1) {
-            var endString = "seconds left!";
-        } else {
-            var endString = "second left!";
-        }
-        $("#timerText").text("You have " + currentTime + endString);
-    },*/
+        if (answerClock.clockType == "Answer") {
+            startString = "Next question in "
+            if (currentTime > 1) {
+                endString = " seconds!";
+            } else if (currentTime == 1) {
+                endString = " second!";
+            } else {
+                startString = "There are "
+                currentTime = game.questionTimer;
+                endString = " seconds left!";
+                answerClock.stop();
+            }
+        } else if (answerClock.clockType == "Question") {
+            
+            if (currentTime > 1) {
+                startString = "There are "
+                endString = " seconds left!";
+            } else if (currentTime == 1) {
+                startString = "There is "
+                endString = " second left!";
+            } else {
+                startString = "There is "
+                currentTime = "no";
+                endString = " time left!";
+                answerClock.stop();
+            }
+        }      
+        $("#timerText").text(startString + currentTime + endString);
+    },
 };
 // End timer object
 
@@ -138,15 +177,16 @@ $(document).ready(function() {
 
     //On startButton click
     $(".startButton").click(function() {
-        $("#bottomBanner").css("display", "none");
-        $("#startMessage").css("display", "none");
-        $(".startButton").css("display", "none");
         game.correct = 0;
         game.incorrect = 0;
         game.outoftime = 0;
         game.currentQuestion = 0;
         game.currentAnswer = "";
         game.newQuestion();
+        $("#bottomBanner").css("display", "none");
+        $("#startMessage").css("display", "none");
+        $(".startButton").css("display", "none");
+        $("#timerText").css("display", "inline-block");
     });
 
     // Display submit button after a radio button is clicked
@@ -158,7 +198,7 @@ $(document).ready(function() {
     $("#submitButton").click(function() {
         $("#submitButton").css("display", "none");
         var userAnswer = $('input[name=quizAnswer]:checked').val();
+        answerClock.stop();
         game.showAnswer(userAnswer);
     });
-
 });

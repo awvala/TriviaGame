@@ -51,6 +51,11 @@ label {
     display: none;
 }
 
+#correctAnswers {
+    display: inline-block;
+    color: black;
+}
+
 #bottomBanner {
     width: 55%;
     max-height: 200px;
