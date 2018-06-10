@@ -103,7 +103,7 @@ showResults: function () {
     $("#questionAndResponse").css("display", "none");
     $("#correctAnswer").css("display", "none");
     $("#gifAnswer").css("display", "none");
-    $("#learnMore").css("display", "inline-block");
+    $("#learnMore").css("display", "block");
     $("iframe").css("display", "inline-block");
 
     // show results in article results id
