@@ -66,3 +66,16 @@ label {
     right: 0;
     bottom: 80px;
 }
+
+iframe {
+    display: none;
+}
+
+#learnMore {
+    display: none;
+}
+
+#gifAnswer {
+    height: auto;
+    max-width: 200px;
+}

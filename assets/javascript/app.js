@@ -12,26 +12,27 @@ var game = {
     currentQuestion: 0,
     nextQuestion: 0,
     currentAnswer: "",
-    questionTimer: 1,
-    answerTimer: 1,
+    userAnswr: "",
+    questionTimer: 10,
+    answerTimer: 10,
 
     slidearr: [
         // Array Config:  Question string, Answer 1 string, Answer 2 st4ring, Answer 3 string, Answwer 4 string, corrent answer number
-        ["Question 0", "Answer 1", "Answer 2", "Answer 3", "Answer 4", 2],
-        ["Question 1", "Answer 1", "Answer 2", "Answer 3", "Answer 4", 3],
-        ["Question 2", "Answer 1", "Answer 2", "Answer 3", "Answer 4", 1],
-        ["Question 3", "Answer 1", "Answer 2", "Answer 3", "Answer 4", 4],
-        ["Question 4", "Answer 1", "Answer 2", "Answer 3", "Answer 4", 3],
-        ["Question 5", "Answer 1", "Answer 2", "Answer 3", "Answer 4", 4],
-        ["Question 6", "Answer 1", "Answer 2", "Answer 3", "Answer 4", 2],
-        ["Question 7", "Answer 1", "Answer 2", "Answer 3", "Answer 4", 3],
-        ["Question 8", "Answer 1", "Answer 2", "Answer 3", "Answer 4", 4],
-        ["Question 9", "Answer 1", "Answer 2", "Answer 3", "Answer 4", 1],
-        ["Question 10", "Answer 1", "Answer 2", "Answer 3", "Answer 4", 1],
-        ["Question 11", "Answer 1", "Answer 2", "Answer 3", "Answer 4", 4],
-        ["Question 12", "Answer 1", "Answer 2", "Answer 3", "Answer 4", 3],
-        ["Question 13", "Answer 1", "Answer 2", "Answer 3", "Answer 4", 2],
-        ["Question 14", "Answer 1", "Answer 2", "Answer 3", "Answer 4", 1],
+        ["Question 0", "Answer 1", "Answer 2", "Answer 3", "Answer 4", 2, "assets/images/kyudo0.gif"],
+        ["Question 1", "Answer 1", "Answer 2", "Answer 3", "Answer 4", 3, "https://j.gifs.com/L8pZBA.gif"],
+        ["Question 2", "Answer 1", "Answer 2", "Answer 3", "Answer 4", 1, "assets/images/kyudo2.gif"],
+        ["Question 3", "Answer 1", "Answer 2", "Answer 3", "Answer 4", 4, "https://j.gifs.com/rRG2V4.gif"],
+        ["Question 4", "Answer 1", "Answer 2", "Answer 3", "Answer 4", 3, "assets/images/kyudo4.gif"],
+        ["Question 5", "Answer 1", "Answer 2", "Answer 3", "Answer 4", 4, "https://j.gifs.com/2vp8D1.gif"],
+        ["Question 6", "Answer 1", "Answer 2", "Answer 3", "Answer 4", 2, "assets/images/kyudo6.gif"],
+        ["Question 7", "Answer 1", "Answer 2", "Answer 3", "Answer 4", 3, "assets/images/kyudo7.gif"],
+        ["Question 8", "Answer 1", "Answer 2", "Answer 3", "Answer 4", 4, "assets/images/kyudo8.gif"],
+        ["Question 9", "Answer 1", "Answer 2", "Answer 3", "Answer 4", 1, "assets/images/kyudo9.gif"],
+        ["Question 10", "Answer 1", "Answer 2", "Answer 3", "Answer 4", 1, "assets/images/kyudo10.gif"],
+        ["Question 11", "Answer 1", "Answer 2", "Answer 3", "Answer 4", 4, "assets/images/kyudo11.gif"],
+        ["Question 12", "Answer 1", "Answer 2", "Answer 3", "Answer 4", 3, "assets/images/kyudo12.gif"],
+        ["Question 13", "Answer 1", "Answer 2", "Answer 3", "Answer 4", 2, "assets/images/kyudo13.gif"],
+        ["Question 14", "Answer 1", "Answer 2", "Answer 3", "Answer 4", 1, "https://j.gifs.com/rRG2B4.gif"],
     ],
 
 newQuestion: function () {
@@ -39,7 +40,6 @@ newQuestion: function () {
     game.currentQuestion =  game.nextQuestion;
     var questionIndex = game.currentQuestion;
     game.nextQuestion = questionIndex +1;
-    //console.log("c" + questionIndex + " n" + game.nextQuestion);
     $("#results").css("display", "none");
     $("#gifanswer").html("");
     $(".answers").css("display", "inline-block");
@@ -59,25 +59,33 @@ newQuestion: function () {
     answerClock.start(game.questionTimer);
 },
 
-showAnswer: function (userAnswer) {
+showAnswer: function () {
+    var userAnswer = game.userAnswr;
+    //console.log ("user " + userAnswer + " current " + game.currentAnswer);
     if (userAnswer == game.currentAnswer) {
         game.correct ++;
+        //console.log("correct");
         $("#questionAndResponse").text("Correct!");
-    } else if (userAnswer == "timesup") {
+    } else if (userAnswer == "") {
         game.outoftime ++;
+        //console.log("out of time");
         $("#questionAndResponse").text("Out of Time!");
     } else {
         game.incorrect ++;
+        //console.log("incorrect");
         $("#questionAndResponse").text("Incorrect!");
     }
     $("#correctAnswer").text("Correct Answer: " + game.slidearr[game.currentQuestion][game.currentAnswer]);
     $("#results").css("display", "inline-block");
+    game.userAnswr = "";
 
 // then clear id buttonBox of question and display answers for 10 seconds
     $('input[name=quizAnswer]').prop('checked', false);
+    $(".answers").css("display", "inline-block");
     $(".answers").css("display", "none");
     $("#submitButton").css("display", "none");
-    $("#nextButton").css("display", "inline-block");
+    $("#gifAnswer").attr("src", game.slidearr[game.currentQuestion][6]);
+    $("#gifAnswer").css("display", "inline-block");
     answerClock.clockType = "Answer";
     $("#timerText").text("Next question in " + game.answerTimer + " seconds");
     answerClock.start(game.answerTimer);
@@ -94,6 +102,9 @@ showResults: function () {
     $("#timerText").css("display", "none");
     $("#questionAndResponse").css("display", "none");
     $("#correctAnswer").css("display", "none");
+    $("#gifAnswer").css("display", "none");
+    $("#learnMore").css("display", "inline-block");
+    $("iframe").css("display", "inline-block");
 
     // show results in article results id
     correctPara.text("Questions correct: " + game.correct);
@@ -121,7 +132,6 @@ var answerClock = {
     start: function (newTime) {
         if (!clockRunning) {
             answerClock.time = newTime;
-            //$("#timerText").css("display", "inline-block");
             intervalId = setInterval(answerClock.count, 1000);
             clockRunning = true;
             if (answerClock.clockType === "Answer") { 
@@ -136,14 +146,15 @@ var answerClock = {
         clearInterval(intervalId);
         clockRunning= false;
         $("#timerText").text("");
-        if (answerClock.clockType == "Answer") { 
+
+        if (answerClock.clockType === "Answer") { 
             if (game.currentQuestion < game.slidearr.length-1) {
                 game.newQuestion();
             } else {
                 game.showResults();
             }
-        } else if (answerClock.clockType == "Question") {
-            game.showAnswer("timesup");
+        } else if (answerClock.clockType === "Question") {
+            game.showAnswer();
         }
       }, 
 
@@ -165,8 +176,7 @@ var answerClock = {
                 endString = " seconds left!";
                 answerClock.stop();
             }
-        } else if (answerClock.clockType == "Question") {
-            
+        } else if (answerClock.clockType == "Question") {         
             if (currentTime > 1) {
                 startString = "There are "
                 endString = " seconds left!";
@@ -197,10 +207,12 @@ $(document).ready(function() {
         game.currentAnswer = "";
         game.newQuestion();
         $("#bottomBanner").css("display", "none");
+        $("#learnMore").css("display", "none");
         $("#startMessage").css("display", "none");
         $(".startButton").css("display", "none");
         $("#timerText").css("display", "inline-block");
         $(".newResults").text("");
+        $("#questionAndResponse").css("display", "block");
         $("#correctAnswer").css("display", "inline-block");
     });
 
@@ -212,8 +224,7 @@ $(document).ready(function() {
     // On submitButton click, grab the select radio value and pass it to showAnswer function
     $("#submitButton").click(function() {
         $("#submitButton").css("display", "none");
-        var userAnswer = $('input[name=quizAnswer]:checked').val();
+        game.userAnswr = $('input[name=quizAnswer]:checked').val();
         answerClock.stop();
-        game.showAnswer(userAnswer);
     });
 });
