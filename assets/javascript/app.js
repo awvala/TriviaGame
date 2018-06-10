@@ -10,9 +10,10 @@ var game = {
     incorrect: 0,
     outoftime: 0,
     currentQuestion: 0,
+    nextQuestion: 0,
     currentAnswer: "",
-    questionTimer: 15,
-    answerTimer: 10,
+    questionTimer: 1,
+    answerTimer: 1,
 
     slidearr: [
         // Array Config:  Question string, Answer 1 string, Answer 2 st4ring, Answer 3 string, Answwer 4 string, corrent answer number
@@ -35,7 +36,10 @@ var game = {
 
 newQuestion: function () {
     // Hide previous answer id's and classes
-    var questionIndex =  game.currentQuestion;
+    game.currentQuestion =  game.nextQuestion;
+    var questionIndex = game.currentQuestion;
+    game.nextQuestion = questionIndex +1;
+    //console.log("c" + questionIndex + " n" + game.nextQuestion);
     $("#results").css("display", "none");
     $("#gifanswer").html("");
     $(".answers").css("display", "inline-block");
@@ -50,7 +54,6 @@ newQuestion: function () {
     }
 
 // update global variables currentQuestion and current Answer
-    //game.currentQuestion ++;
     game.currentAnswer = game.slidearr[questionIndex][5];
     answerClock.clockType = "Question";
     answerClock.start(game.questionTimer);
@@ -74,29 +77,23 @@ showAnswer: function (userAnswer) {
     $('input[name=quizAnswer]').prop('checked', false);
     $(".answers").css("display", "none");
     $("#submitButton").css("display", "none");
-    game.currentQuestion ++;
-    
-    if (game.currentQuestion < game.slidearr.length+1) {
-        //start 10 second timer
-        $("#nextButton").css("display", "inline-block");
-        answerClock.clockType = "Answer";
-        $("#timerText").text("Next question in " + game.answerTimer + " seconds");
-        answerClock.start(game.answerTimer);
-    } else {
-        $("#nextButton").css("display", "none");
-        game.showResults();
-    }
+    $("#nextButton").css("display", "inline-block");
+    answerClock.clockType = "Answer";
+    $("#timerText").text("Next question in " + game.answerTimer + " seconds");
+    answerClock.start(game.answerTimer);
 },
 
 showResults: function () {
 
     var updateResults = $("#results");
-    var correctPara = $("<p>");
-    var incorrectPara = $("<p>");
-    var outOfTimePara = $("<p>");
+    var correctPara = $("<p class ='newResults'>");
+    var incorrectPara = $("<p class ='newResults'>");
+    var outOfTimePara = $("<p class ='newResults'>");
 
     // clear question id and classes
     $("#timerText").css("display", "none");
+    $("#questionAndResponse").css("display", "none");
+    $("#correctAnswer").css("display", "none");
 
     // show results in article results id
     correctPara.text("Questions correct: " + game.correct);
@@ -107,8 +104,8 @@ showResults: function () {
     $(updateResults).append(incorrectPara);
     $(updateResults).append(outOfTimePara);
 
-    // show startButton and change value attrribute to "Try again?"
-    $("#startButton").css("display", "inline-block").value("Try again?");
+    // show startButton and change value attribute to "Try again?"
+    $(".startButton").css("display", "inline-block").attr("value","Try again?");
 },
 
 }; 
@@ -122,7 +119,6 @@ var answerClock = {
     clockType: "",
 
     start: function (newTime) {
-        //console.log(answerClock.clockType);
         if (!clockRunning) {
             answerClock.time = newTime;
             //$("#timerText").css("display", "inline-block");
@@ -141,7 +137,11 @@ var answerClock = {
         clockRunning= false;
         $("#timerText").text("");
         if (answerClock.clockType == "Answer") { 
-            game.newQuestion();
+            if (game.currentQuestion < game.slidearr.length-1) {
+                game.newQuestion();
+            } else {
+                game.showResults();
+            }
         } else if (answerClock.clockType == "Question") {
             game.showAnswer("timesup");
         }
@@ -152,7 +152,6 @@ var answerClock = {
         var startString;
         var endString;
         var currentTime = answerClock.time;
-        console.log(answerClock.time);
 
         if (answerClock.clockType == "Answer") {
             startString = "Next question in "
@@ -194,12 +193,15 @@ $(document).ready(function() {
         game.incorrect = 0;
         game.outoftime = 0;
         game.currentQuestion = 0;
+        game.nextQuestion = 0;
         game.currentAnswer = "";
         game.newQuestion();
         $("#bottomBanner").css("display", "none");
         $("#startMessage").css("display", "none");
         $(".startButton").css("display", "none");
         $("#timerText").css("display", "inline-block");
+        $(".newResults").text("");
+        $("#correctAnswer").css("display", "inline-block");
     });
 
     // Display submit button after a radio button is clicked
