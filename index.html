@@ -16,7 +16,9 @@
             <p id= "startMessage">Let's test your Kyudo knowledge!</p>
             <p id= "timerText"></p>
             <p id= "questionAndResponse"></p>
-                <article id="buttonBox">
+            <div class="row">
+                <div class= "column"></div>
+                <div class= "column" id="buttonBox">
                     <input type="button" class="startButton" value="Hai!">
                     <input type="radio" class="answers" id= "answer1" name = "quizAnswer" value= "1">
                     <label class="answers" id="label1" for="answer1"></label>
@@ -31,12 +33,14 @@
                     <label class="answers" id="label4" for="answer4"></label>
                     <br>
                     <input type="button" id="submitButton" value="Submit Answer">
-                </article>
-                <article id= "results">
+                </div>
+                <div class= "column"></div>
+                <div id= "results">
                     <p id= "correctAnswer"></p>
                     <br>
                     <img id ="gifAnswer" src="">
-                    </article>
+                </div>
+                </div>
             </section>
         <img id="bottomBanner" src="assets/images/kyudobanner.gif">
     </section>

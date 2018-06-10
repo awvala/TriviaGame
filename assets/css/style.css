@@ -42,6 +42,19 @@ hr {
     margin-top: 10px;
 }
 
+.row {
+    width: 100%;
+}
+
+.column {
+    width: 20.%;
+    display: inline-block;
+}
+
+#buttonBox {
+    text-align: left;
+}
+
 #submitButton {
     display: none;
     margin-top: 20px;

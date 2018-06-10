@@ -13,8 +13,8 @@ var game = {
     nextQuestion: 0,
     currentAnswer: "",
     userAnswr: "",
-    questionTimer: 15,
-    answerTimer: 10,
+    questionTimer: 20,
+    answerTimer: 15,
 
     slidearr: [
         // Array Config:  Question string, Answer 1 string, Answer 2 string, Answer 3 string, Answwer 4 string, correct answer index number, gif link
@@ -109,7 +109,7 @@ showResults: function () {
     correctPara.text("Questions correct: " + game.correct);
     incorrectPara.text("Questions incorrect: " + game.incorrect);
     outOfTimePara.text("Questions not answered: " + game.outoftime);
-    $(updateResults).css("display", "inline-block");
+    $(updateResults).css("display", "block");
     $(updateResults).append(correctPara);
     $(updateResults).append(incorrectPara);
     $(updateResults).append(outOfTimePara);
