@@ -13,11 +13,11 @@ var game = {
     nextQuestion: 0,
     currentAnswer: "",
     userAnswr: "",
-    questionTimer: 10,
+    questionTimer: 15,
     answerTimer: 10,
 
     slidearr: [
-        // Array Config:  Question string, Answer 1 string, Answer 2 st4ring, Answer 3 string, Answwer 4 string, corrent answer number
+        // Array Config:  Question string, Answer 1 string, Answer 2 st4ring, Answer 3 string, Answwer 4 string, current answer number, gif link
         ["Question 0", "Answer 1", "Answer 2", "Answer 3", "Answer 4", 2, "assets/images/kyudo0.gif"],
         ["Question 1", "Answer 1", "Answer 2", "Answer 3", "Answer 4", 3, "https://j.gifs.com/L8pZBA.gif"],
         ["Question 2", "Answer 1", "Answer 2", "Answer 3", "Answer 4", 1, "assets/images/kyudo2.gif"],
@@ -104,7 +104,6 @@ showResults: function () {
     $("#correctAnswer").css("display", "none");
     $("#gifAnswer").css("display", "none");
     $("#learnMore").css("display", "block");
-    $("iframe").css("display", "inline-block");
 
     // show results in article results id
     correctPara.text("Questions correct: " + game.correct);
@@ -207,7 +206,6 @@ $(document).ready(function() {
         game.currentAnswer = "";
         game.newQuestion();
         $("#bottomBanner").css("display", "none");
-        $("#learnMore").css("display", "none");
         $("#startMessage").css("display", "none");
         $(".startButton").css("display", "none");
         $("#timerText").css("display", "inline-block");
